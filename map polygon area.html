@@ -24,12 +24,39 @@
 </head>
 
 <body>
+
+    <script
+        src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.5.1/mapbox-gl-geocoder.css"
+        type="text/css" />
+    <!-- Promise polyfill script required to use Mapbox GL Geocoder in IE 11 -->
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
+
     <style>
+        .geocoder {
+            position: absolute;
+            z-index: 1;
+            width: 50%;
+            left: 50%;
+            margin-left: -25%;
+            top: 10px;
+        }
+
+        .mapboxgl-ctrl-geocoder {
+            min-width: 100%;
+        }
+
+        #map {
+            margin-top: 60px;
+        }
+
         .calculation-box {
             height: 75px;
             width: 150px;
             position: absolute;
-            top: 10px;
+            top: 70px;
             right: 45px;
             background-color: rgba(255, 255, 255, 0.9);
             padding: 15px;
@@ -45,10 +72,10 @@
 
     <style>
         #menu {
-            top: 10px;
+            bottom: 35px;
             left: 10px;
             position: absolute;
-            background: #fff;
+            background: rgba(255, 255, 255, 0.9);
             padding: 6px;
             font-family: Georgia, serif;
             font-size: 14px;
@@ -60,6 +87,7 @@
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css"
         type="text/css" />
     <div id="map"></div>
+    <div id="geocoder" class="geocoder"></div>
     <div id="menu">
         <input id="streets-v11" type="radio" name="rtoggle" value="streets" checked="checked" />
         <label for="streets-v11">streets</label>
@@ -89,6 +117,13 @@
                 zoom: 3 // starting zoom
             });
         }
+
+        var geocoder = new MapboxGeocoder({
+            accessToken: mapboxgl.accessToken,
+            mapboxgl: mapboxgl
+        });
+
+        document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 
         // Add geolocate control to the map.
         map.addControl(
