@@ -120,6 +120,12 @@
 
         var geocoder = new MapboxGeocoder({
             accessToken: mapboxgl.accessToken,
+            // limit results to USA
+            countries: 'us',
+
+            // further limit results to the geographic bounds representing the region of MN, WI, ND, SD
+            bbox: [-104.110840,41.023798,-87.231446,49.530081],
+            
             mapboxgl: mapboxgl
         });
 
@@ -128,7 +134,7 @@
         // Add geolocate control to the map.
         map.addControl(
             new mapboxgl.GeolocateControl({
-                setZoom: 14,
+                setZoom: 15,
                 positionOptions: {
                     enableHighAccuracy: true
                 },
