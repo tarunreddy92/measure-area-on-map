@@ -112,9 +112,9 @@
     </div>
 
     <div id="units-menu">
-        <input id="sqmtrs" type="radio" name="rtoggle" value="sq. meters" checked="checked" />
+        <input id="sqmtrs" type="radio" name="unittoggle" value="sq. meters" checked="checked" />
         <label for="sqmtrs">sq. meters</label>
-        <input id="sqft" type="radio" name="rtoggle" value="sq. feet" />
+        <input id="sqft" type="radio" name="unittoggle" value="sq. feet" />
         <label for="sqft">sq. feet</label>
     </div>
 
@@ -142,8 +142,8 @@
             countries: 'us',
 
             // further limit results to the geographic bounds representing the region of MN, WI, ND, SD
-            bbox: [-104.110840,41.023798,-87.231446,49.530081],
-            
+            bbox: [-104.110840, 41.023798, -87.231446, 49.530081],
+
             mapboxgl: mapboxgl
         });
 
@@ -175,6 +175,8 @@
         var layerList = document.getElementById('menu');
         var inputs = layerList.getElementsByTagName('input');
 
+        var units = document.querySelector('input[name = "unittoggle"]:checked').value;
+
         function switchLayer(layer) {
             var layerId = layer.target.id;
             map.setStyle('mapbox://styles/mapbox/' + layerId);
@@ -184,6 +186,14 @@
             inputs[i].onclick = switchLayer;
         } map.addControl(draw);
 
+        function switchUnits(unit) {
+            var unitValue = unit.target.value;
+        }
+
+        for (var i = 0; i < units.length; i++) {
+            units[i].onclick = switchUnits;
+        }
+
         map.on('draw.create', updateArea);
         map.on('draw.delete', updateArea);
         map.on('draw.update', updateArea);
@@ -192,12 +202,17 @@
             var data = draw.getAll(); var answer = document.getElementById('calculated-area');
             if (data.features.length > 0) {
                 var area = turf.area(data);
-                // restrict to area to 2 decimal points
-                var rounded_area = Math.round(area * 100) / 100;
+                var rounded_area;
+                if (unitValue = "sq. meters") {
+                    // restrict to area to 2 decimal points
+                    rounded_area = Math.round(area * 100) / 100;
+                } else if (unitValue = "sq. feet") {
+                    rounded_area = Math.round(area * 1076.39) / 100;
+                }
                 answer.innerHTML =
                     '<p><strong>' +
                     rounded_area +
-                    '</strong></p><p>square meters</p>';
+                    '</strong></p><p>' + units + '</p>';
             } else {
                 answer.innerHTML = '';
                 if (e.type !== 'draw.delete')
