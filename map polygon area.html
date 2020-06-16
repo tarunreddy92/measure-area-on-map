@@ -80,6 +80,16 @@
             font-family: Georgia, serif;
             font-size: 14px;
         }
+
+        #units-menu {
+            top: 180px;
+            right: 10px;
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 6px;
+            font-family: Georgia, serif;
+            font-size: 14px;
+        }
     </style>
 
     <script src="https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js"></script>
@@ -100,6 +110,14 @@
         <input id="satellite-v9" type="radio" name="rtoggle" value="satellite" />
         <label for="satellite-v9">satellite</label>
     </div>
+
+    <div id="units-menu">
+        <input id="sqmtrs" type="radio" name="rtoggle" value="sq. meters" checked="checked" />
+        <label for="sqmtrs">sq. meters</label>
+        <input id="sqft" type="radio" name="rtoggle" value="sq. feet" />
+        <label for="sqft">sq. feet</label>
+    </div>
+
     <div class="calculation-box">
         <p>Draw a polygon using the draw tools.</p>
         <div id="calculated-area"></div>
