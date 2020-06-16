@@ -1,11 +1,30 @@
 
 mapboxgl.accessToken = 'pk.eyJ1IjoidGFydW5yZWRkeTkyIiwiYSI6ImNrYWsydnNsODAya2Iyc2xnajBjYmNtbHUifQ.VdKf2V0xgzASiFZPTInhhw';
-var map = new mapboxgl.Map({
-    container: 'map', // container id
-    style: 'mapbox://styles/mapbox/satellite-v9', //hosted style id
-    center: [-91.874, 42.76], // starting position
-    zoom: 12 // starting zoom
-});
+if (!mapboxgl.supported()) {
+    alert('Your browser does not support Mapbox GL');
+} else {
+    var map = new mapboxgl.Map({
+        container: 'map', // container id
+        style: 'mapbox://styles/mapbox/streets-v11', // 'mapbox://styles/tarunreddy92/ckak3ad5h0uvs1ip7rg1hr0ux', // 'mapbox://styles/mapbox/satellite-v9', //hosted style id
+        center: [-96, 37.8], // starting position
+        zoom: 3 // starting zoom
+    });
+}
+
+// Add geolocate control to the map.
+map.addControl(
+    new mapboxgl.GeolocateControl({
+        setZoom: 14,
+        positionOptions: {
+            enableHighAccuracy: true
+        },
+        trackUserLocation: false,
+        showAccuracyCircle: false,
+        fitBoundsOptions: {
+            maxZoom: 15
+        }
+    })
+);
 
 var draw = new MapboxDraw({
     displayControlsDefault: false,
@@ -14,7 +33,18 @@ var draw = new MapboxDraw({
         trash: true
     }
 });
-map.addControl(draw);
+
+var layerList = document.getElementById('menu');
+var inputs = layerList.getElementsByTagName('input');
+
+function switchLayer(layer) {
+    var layerId = layer.target.id;
+    map.setStyle('mapbox://styles/mapbox/' + layerId);
+}
+
+for (var i = 0; i < inputs.length; i++) {
+    inputs[i].onclick = switchLayer;
+} map.addControl(draw);
 
 map.on('draw.create', updateArea);
 map.on('draw.delete', updateArea);
